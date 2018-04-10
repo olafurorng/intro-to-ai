@@ -1,8 +1,3 @@
-import entities.Node;
-import entities.Road;
-import search.Heuristic;
-import search.SearcherAstar;
-
 import java.util.ArrayList;
 import java.util.List;
 

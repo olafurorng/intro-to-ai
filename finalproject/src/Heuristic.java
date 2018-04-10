@@ -1,6 +1,4 @@
-package search;
 
-import entities.Node;
 
 import java.util.Comparator;
 

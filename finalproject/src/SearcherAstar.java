@@ -1,8 +1,3 @@
-package search;
-
-import entities.Node;
-
-import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
