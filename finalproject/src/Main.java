@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.io.*;
 
 /**
@@ -8,10 +9,12 @@ import java.io.*;
 public class Main {
 
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
+
         List<Road> roads = new ArrayList<>();
 
         // Data file to open.
-        String fileName = "data/manhattan.txt";
+        String fileName = "data/city.txt";
 
         String line = null;
 
@@ -53,5 +56,8 @@ public class Main {
         String pathFound = heureka.findPath(new Node(null, latStart, longStart), latEnd, longEnd);
         System.out.println();
         System.out.println("Path found: " + pathFound);
+
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println("Time to find a path: " + estimatedTime + " milliseconds");
     }
 }
