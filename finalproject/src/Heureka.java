@@ -19,18 +19,17 @@ public class Heureka {
     }
 
 
-    public boolean findPath(Node startCrossing, int latEnd, int longEnd) {
+    public String findPath(Node startCrossing, int latEnd, int longEnd) {
         searcher.addToFrontier(startCrossing);
         return exploreNodes(latEnd, longEnd);
     }
 
-    private boolean exploreNodes(int latEnd, int longEnd) {
+    private String exploreNodes(int latEnd, int longEnd) {
         Node exploringNode = searcher.getAndRemoveLeaf();
-        System.out.println("Exploring: " + exploringNode);
         List<Road> availableRoads = getAvailableRoads(exploringNode);
         for (Road road : availableRoads) {
             if (road.getLatEnd() == latEnd && road.getLongEnd() == longEnd) {
-                return true;
+                return getPathFromNodeAsString(new Node(exploringNode, road.getLatEnd(), road.getLongEnd()));
             }
             searcher.addToFrontier(new Node(exploringNode, road.getLatEnd(), road.getLongEnd()));
         }
@@ -48,6 +47,13 @@ public class Heureka {
         }
 
         return availableRoads;
+    }
+
+    private String getPathFromNodeAsString(Node node) {
+        if (node.getParent() == null) {
+            return "(" + node.getLatitude() + "," + node.getLongitude() + ")";
+        }
+        return getPathFromNodeAsString(node.getParent()) + "-> (" + node.getLatitude() + "," + node.getLongitude() + ")";
     }
 }
 
