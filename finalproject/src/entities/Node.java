@@ -9,10 +9,23 @@ public class Node {
     private int latitude;
     private int longitude;
 
+    private int g;
+
     public Node(Node parent, int latitude, int longitude) {
         this.parent = parent;
         this.latitude = latitude;
         this.longitude = longitude;
+
+        if (parent == null) {
+            this.g = 0;
+        } else {
+            this.g = parent.g() + 1;
+        }
+    }
+
+
+    public int g() {
+        return this.g;
     }
 
     public int getLatitude() {

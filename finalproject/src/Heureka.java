@@ -1,6 +1,7 @@
 import entities.Node;
 import entities.Road;
-import search.Searcher;
+import search.Heuristic;
+import search.SearcherAstar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,28 +11,28 @@ import java.util.List;
  */
 public class Heureka {
 
-    final Searcher searcher;
-    final List<Road> roads;
+    private final List<Road> roads;
+    private SearcherAstar searcherAstar;
 
     public Heureka(List<Road> roads) {
-        this.searcher = new Searcher();
         this.roads = roads;
     }
 
 
     public String findPath(Node startCrossing, int latEnd, int longEnd) {
-        searcher.addToFrontier(startCrossing);
+        this.searcherAstar = new SearcherAstar(new Heuristic(latEnd, longEnd));
+        searcherAstar.addToFrontier(startCrossing);
         return exploreNodes(latEnd, longEnd);
     }
 
     private String exploreNodes(int latEnd, int longEnd) {
-        Node exploringNode = searcher.getAndRemoveLeaf();
+        Node exploringNode = searcherAstar.getAndRemoveLeaf();
         List<Road> availableRoads = getAvailableRoads(exploringNode);
         for (Road road : availableRoads) {
             if (road.getLatEnd() == latEnd && road.getLongEnd() == longEnd) {
                 return getPathFromNodeAsString(new Node(exploringNode, road.getLatEnd(), road.getLongEnd()));
             }
-            searcher.addToFrontier(new Node(exploringNode, road.getLatEnd(), road.getLongEnd()));
+            searcherAstar.addToFrontier(new Node(exploringNode, road.getLatEnd(), road.getLongEnd()));
         }
 
         return exploreNodes(latEnd, longEnd);
