@@ -1,12 +1,14 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.io.*;
 
 /**
  * Created by olafurorn on 4/9/18.
  */
-public class Main {
+public class MainLogic {
 
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
