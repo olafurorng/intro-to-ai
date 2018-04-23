@@ -6,13 +6,15 @@ public class NodeRoute implements Node {
     private NodeRoute parent;
     private int latitude;
     private int longitude;
+    private String name;
 
     private int g;
 
-    public NodeRoute(NodeRoute parent, int latitude, int longitude) {
+    public NodeRoute(NodeRoute parent, int latitude, int longitude, String name) {
         this.parent = parent;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.name = name;
 
         if (parent == null) {
             this.g = 0;
@@ -36,6 +38,10 @@ public class NodeRoute implements Node {
 
     public NodeRoute getParent() {
         return parent;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

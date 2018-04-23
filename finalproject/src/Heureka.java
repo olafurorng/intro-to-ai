@@ -128,9 +128,9 @@ public class Heureka {
         List<Road> availableRoads = getAvailableRoads(exploringNode);
         for (Road road : availableRoads) {
             if (road.getLatEnd() == latEnd && road.getLongEnd() == longEnd) {
-                return getPathFromNodeAsString(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd()));
+                return getPathFromNodeAsString(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd(), road.getName()));
             }
-            searcherAstar.addToFrontier(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd()));
+            searcherAstar.addToFrontier(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd(), road.getName()));
         }
 
         return exploreNodesRoute(latEnd, longEnd);
@@ -150,9 +150,9 @@ public class Heureka {
 
     private String getPathFromNodeAsString(NodeRoute node) {
         if (node.getParent() == null) {
-            return "(" + node.getLatitude() + "," + node.getLongitude() + ")";
+            return node.getName() + " (" + node.getLatitude() + "," + node.getLongitude() + ")";
         }
-        return getPathFromNodeAsString(node.getParent()) + "-> (" + node.getLatitude() + "," + node.getLongitude() + ")";
+        return getPathFromNodeAsString(node.getParent()) + "-> " + node.getName() + " (" + node.getLatitude() + "," + node.getLongitude() + ")";
     }
 }
 
