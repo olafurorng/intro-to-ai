@@ -16,7 +16,7 @@ public class MainLogic {
         List<Clause> clauses = new ArrayList<>();
 
         // Data file to open.
-        String fileName = "data/clausetest2_negative.txt";
+        String fileName = "data/clausetest2.txt";
 
         String line = null;
 

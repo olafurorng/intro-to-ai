@@ -51,17 +51,15 @@ public class NodeRoute implements Node {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        NodeRoute node = (NodeRoute) o;
+        NodeRoute nodeRoute = (NodeRoute) o;
 
-        if (latitude != node.latitude) return false;
-        if (longitude != node.longitude) return false;
-        return parent != null ? parent.equals(node.parent) : node.parent == null;
+        if (latitude != nodeRoute.latitude) return false;
+        return longitude == nodeRoute.longitude;
     }
 
     @Override
     public int hashCode() {
-        int result = parent != null ? parent.hashCode() : 0;
-        result = 31 * result + latitude;
+        int result = latitude;
         result = 31 * result + longitude;
         return result;
     }

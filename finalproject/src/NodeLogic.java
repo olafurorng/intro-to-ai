@@ -59,16 +59,11 @@ public class NodeLogic implements Node {
 
         NodeLogic nodeLogic = (NodeLogic) o;
 
-        if (g != nodeLogic.g) return false;
-        if (parent != null ? !parent.equals(nodeLogic.parent) : nodeLogic.parent != null) return false;
         return kownLiterals.equals(nodeLogic.kownLiterals);
     }
 
     @Override
     public int hashCode() {
-        int result = parent != null ? parent.hashCode() : 0;
-        result = 31 * result + kownLiterals.hashCode();
-        result = 31 * result + g;
-        return result;
+        return kownLiterals.hashCode();
     }
 }
