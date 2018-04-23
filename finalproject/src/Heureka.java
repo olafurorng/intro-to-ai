@@ -28,7 +28,7 @@ public class Heureka {
         this.knowledgeBase = knowledgeBase;
         this.goal = goal;
 
-        // find all literals
+        // Lets find all literals
         allLiteralsWithoutTheGoal = new HashSet<>();
         for (Clause clause : knowledgeBase) {
             HashMap<Character, Boolean> literals = clause.getCnfHash();
@@ -38,9 +38,28 @@ public class Heureka {
         }
         allLiteralsWithoutTheGoal.remove(goal);
 
+        // Lets find which literals is needed to resolve the goal
+        Set<Character> literalsToResolveGoal = new HashSet<>();
+        for (Clause clause : knowledgeBase) {
+            HashMap<Character, Boolean> literals = clause.getCnfHash();
+            for (Character literal : literals.keySet()) {
+                if (literal == goal && literals.get(literal)) { // is goal literal and is positive literal, i.e. is on the left side
+                    // lets find all the literals on the right side which are needed literals to resolve the goal
+                    for (Character literal2 : literals.keySet()) {
+                        if (!literals.get(literal2)) { // is a negative literal, i..e on the right side
+                            literalsToResolveGoal.add(literal2);
+                        }
+                    }
+                }
+
+                allLiteralsWithoutTheGoal.add(literal);
+            }
+        }
+        allLiteralsWithoutTheGoal.remove(goal);
+
 
         // create the A* search and start searching
-        this.searcherAstar = new SearcherAstar(new Heuristic.HeuristicLogic());
+        this.searcherAstar = new SearcherAstar(new Heuristic.HeuristicLogic(allLiteralsWithoutTheGoal.size() + 1, literalsToResolveGoal));
         NodeLogic startingNode = new NodeLogic(null, null, knownLiterals);
         searcherAstar.addToFrontier(startingNode);
         return exploreNodesLogic();
