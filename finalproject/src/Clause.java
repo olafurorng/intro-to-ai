@@ -1,3 +1,4 @@
+import java.util.HashMap;
 
 public class Clause {
 
@@ -36,5 +37,27 @@ public class Clause {
 
     public HashMap getCnfHash() {
         return cnfHash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Clause clause = (Clause) o;
+
+        return originalForm.equals(clause.originalForm);
+    }
+
+    @Override
+    public int hashCode() {
+        return originalForm.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Clause{" +
+                "originalForm='" + originalForm + '\'' +
+                '}';
     }
 }
