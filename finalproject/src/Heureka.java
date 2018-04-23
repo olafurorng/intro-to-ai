@@ -6,35 +6,36 @@ import java.util.List;
  */
 public class Heureka {
 
-    private final List<Road> roads;
+    private List<Road> roads;
     private SearcherAstar searcherAstar;
 
-    public Heureka(List<Road> roads) {
+    public Heureka() {
+
+    }
+
+
+    public String findRoutePath(List<Road> roads, Node startCrossing, int latEnd, int longEnd) {
         this.roads = roads;
-    }
-
-
-    public String findPath(Node startCrossing, int latEnd, int longEnd) {
-        this.searcherAstar = new SearcherAstar(new Heuristic(latEnd, longEnd));
+        this.searcherAstar = new SearcherAstar(new Heuristic.HeuristicRoute(latEnd, longEnd));
         searcherAstar.addToFrontier(startCrossing);
-        return exploreNodes(latEnd, longEnd);
+        return exploreNodesRoute(latEnd, longEnd);
     }
 
-    private String exploreNodes(int latEnd, int longEnd) {
-        Node exploringNode = searcherAstar.getAndRemoveLeaf();
+    private String exploreNodesRoute(int latEnd, int longEnd) {
+        NodeRoute exploringNode = (NodeRoute) searcherAstar.getAndRemoveLeaf();
         List<Road> availableRoads = getAvailableRoads(exploringNode);
         for (Road road : availableRoads) {
             if (road.getLatEnd() == latEnd && road.getLongEnd() == longEnd) {
-                return getPathFromNodeAsString(new Node(exploringNode, road.getLatEnd(), road.getLongEnd()));
+                return getPathFromNodeAsString(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd()));
             }
-            searcherAstar.addToFrontier(new Node(exploringNode, road.getLatEnd(), road.getLongEnd()));
+            searcherAstar.addToFrontier(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd()));
         }
 
-        return exploreNodes(latEnd, longEnd);
+        return exploreNodesRoute(latEnd, longEnd);
     }
 
 
-    private List<Road> getAvailableRoads(Node crossing) {
+    private List<Road> getAvailableRoads(NodeRoute crossing) {
         List<Road> availableRoads = new ArrayList<>();
         for (Road road : roads) {
             if (road.getLatStart() == crossing.getLatitude() && road.getLongStart() == crossing.getLongitude()) {
@@ -45,7 +46,7 @@ public class Heureka {
         return availableRoads;
     }
 
-    private String getPathFromNodeAsString(Node node) {
+    private String getPathFromNodeAsString(NodeRoute node) {
         if (node.getParent() == null) {
             return "(" + node.getLatitude() + "," + node.getLongitude() + ")";
         }
