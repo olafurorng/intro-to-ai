@@ -40,7 +40,9 @@ public class MainLogic {
             System.out.println("Error reading file '" + fileName + "'");                  
         }
 
-        System.out.println("Clauses: " + clauses);
+        for (Clause clause : clauses) {
+            System.out.println("Clauses hash: " + clause.getCnfHash());
+        }
 
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time to find a path: " + estimatedTime + " milliseconds");
