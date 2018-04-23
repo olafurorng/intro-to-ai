@@ -16,7 +16,7 @@ public class MainLogic {
         List<Clause> clauses = new ArrayList<>();
 
         // Data file to open.
-        String fileName = "data/clausetest1.txt";
+        String fileName = "data/clausetest2_negative.txt";
 
         String line = null;
 
@@ -62,7 +62,7 @@ public class MainLogic {
         }
 
         Heureka heureka = new Heureka();
-        String resolvedClauses = heureka.resolveFromKb(clauses, "a", knownLiterals);
+        String resolvedClauses = heureka.resolveFromKb(clauses, "q", knownLiterals);
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time to find a path: " + estimatedTime + " milliseconds");
         System.out.println();
