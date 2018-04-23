@@ -20,7 +20,6 @@ public class MainLogic {
 
         // Data file to open.
         String fileName = "data/clauses.txt";
-        Character goal = 'a';
 
         String line = null;
 
@@ -73,7 +72,7 @@ public class MainLogic {
         }
 
         Heureka heureka = new Heureka();
-        String resolvedClauses = heureka.resolveFromKb(clauses, goal, knownLiterals);
+        String resolvedClauses = heureka.resolveFromKb(clauses, 'a', knownLiterals);
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time to find a path: " + estimatedTime + " milliseconds");
         System.out.println();
