@@ -21,9 +21,9 @@ public class Clause {
 
             for (String letter : spaceArray) {
                 if (letter != null && !letter.isEmpty()) {    
-                    if (letter.length() > 1) {
+                    if (letter.substring(0, 1) == "!") {
                         //cnfHash.put(letter.substring(letter.length() - 1), false);
-                        cnfHashRight.put(letter.substring(letter.length() - 1), false);
+                        cnfHashRight.put(letter.substring(1), false);
                     }
                     else {
                         //cnfHash.put(letter, true);
@@ -51,9 +51,9 @@ public class Clause {
 
             for (String letter : leftSpaceArray) {
                 if (letter != null && !letter.isEmpty()) {  
-                    if (letter.length() > 1) {
+                    if (letter.substring(0, 1) == "!") {
                         //cnfHash.put(letter.substring(letter.length() - 1), false);
-                        cnfHashLeft.put(letter.substring(letter.length() - 1), false);
+                        cnfHashLeft.put(letter.substring(1), false);
                     }
                     else {
                         //cnfHash.put(letter, true);
@@ -64,9 +64,9 @@ public class Clause {
 
             for (String letter : RightSpaceArray) {  
                 if (letter != null && !letter.isEmpty()) {    
-                    if (letter.length() > 1) {
+                    if (letter.substring(0, 1) == "!") {
                         //cnfHash.put(letter.substring(letter.length() - 1), true);
-                        cnfHashRight.put(letter.substring(letter.length() - 1), true);
+                        cnfHashRight.put(letter.substring(1), true);
                     }
                     else {
                         //cnfHash.put(letter, false);
