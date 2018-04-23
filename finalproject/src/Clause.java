@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map;
 
 public class Clause {
 
@@ -84,11 +85,11 @@ public class Clause {
     //    return cnfHash;
     //}
 
-    public HashMap getCnfHashLeft() {
+    public HashMap<String, Boolean> getCnfHashLeft() {
         return cnfHashLeft;
     }
 
-    public HashMap getCnfHashRight() {
+    public HashMap<String, Boolean> getCnfHashRight() {
         return cnfHashRight;
     }
 
@@ -118,7 +119,7 @@ public class Clause {
     @Override
     public String toString() {
         return "Clause{" +
-                "originalForm='" + originalForm + '\'' +
+                "cnfHash=" + cnfHash +
                 '}';
     }
 }

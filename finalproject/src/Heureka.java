@@ -1,17 +1,132 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by olafurorn on 4/9/18.
  */
 public class Heureka {
 
-    private List<Road> roads;
     private SearcherAstar searcherAstar;
+
+    // class variables for Inference Engine for Propositional Logic
+    private List<Clause> knowledgeBase;
+    private Set<Character> allLiteralsWithoutTheGoal;
+    private Character goal;
+
+    // class variables for route finding
+    private List<Road> roads;
+
 
     public Heureka() {
 
     }
+
+    /*******************************************************
+     ******  Inference Engine for Propositional Logic ******
+     *******************************************************/
+
+    public String resolveFromKb(List<Clause> knowledgeBase, Character goal, List<Character> knownLiterals) {
+        this.knowledgeBase = knowledgeBase;
+        this.goal = goal;
+
+        // Lets find all literals
+        allLiteralsWithoutTheGoal = new HashSet<>();
+        for (Clause clause : knowledgeBase) {
+            HashMap<Character, Boolean> literals = clause.getCnfHash();
+            for (Character literal : literals.keySet()) {
+                allLiteralsWithoutTheGoal.add(literal);
+            }
+        }
+        allLiteralsWithoutTheGoal.remove(goal);
+
+        // Lets find which literals is needed to resolve the goal
+        Set<Character> literalsToResolveGoal = new HashSet<>();
+        for (Clause clause : knowledgeBase) {
+            HashMap<Character, Boolean> literals = clause.getCnfHash();
+            for (Character literal : literals.keySet()) {
+                if (literal == goal && literals.get(literal)) { // is goal literal and is positive literal, i.e. is on the left side
+                    // lets find all the literals on the right side which are needed literals to resolve the goal
+                    for (Character literal2 : literals.keySet()) {
+                        if (!literals.get(literal2)) { // is a negative literal, i..e on the right side
+                            literalsToResolveGoal.add(literal2);
+                        }
+                    }
+                }
+
+                allLiteralsWithoutTheGoal.add(literal);
+            }
+        }
+        allLiteralsWithoutTheGoal.remove(goal);
+
+
+        // create the A* search and start searching
+        this.searcherAstar = new SearcherAstar(new Heuristic.HeuristicLogic(allLiteralsWithoutTheGoal.size() + 1, literalsToResolveGoal));
+        NodeLogic startingNode = new NodeLogic(null, null, knownLiterals);
+        searcherAstar.addToFrontier(startingNode);
+        return exploreNodesLogic();
+    }
+
+    private String exploreNodesLogic() {
+        NodeLogic exploringNode = (NodeLogic) searcherAstar.getAndRemoveLeaf();
+        for (Clause clause : knowledgeBase) {
+            List<Character> positiveLiteralsInClause = new ArrayList<>();
+            List<Character> negativeLiteralsInClause = new ArrayList<>();
+
+            HashMap<Character, Boolean> literals = clause.getCnfHash();
+            for (Character literal : literals.keySet()) {
+                if (literals.get(literal)) {
+                    positiveLiteralsInClause.add(literal);
+                } else {
+                    negativeLiteralsInClause.add(literal);
+                }
+            }
+
+
+
+            // check if the clause can be resolved
+            boolean clauseCanBeResolved = !negativeLiteralsInClause.isEmpty();
+            for (Character negativeLiteral : negativeLiteralsInClause) {
+                if (!exploringNode.getKownLiterals().contains(negativeLiteral)) {
+                    clauseCanBeResolved = false;
+                    break;
+                }
+            }
+            if (clauseCanBeResolved) {
+                NodeLogic newNode = new NodeLogic(exploringNode, clause, positiveLiteralsInClause);
+
+                // we check if we have the empty clause
+                if (isEmptyClause(positiveLiteralsInClause)) {
+                    return getResolvedLogicNodesAsString(newNode);
+                }
+
+                searcherAstar.addToFrontier(newNode);
+            }
+        }
+
+        return exploreNodesLogic();
+    }
+
+    private boolean isEmptyClause(List<Character> positiveLiteralsInClause) {
+        // check if any of the literals in 'positiveLiteralsInClause' is not in: "KB ^ -goal"
+        for (Character newLiteral : positiveLiteralsInClause) {
+            if (!allLiteralsWithoutTheGoal.contains(newLiteral)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private String getResolvedLogicNodesAsString(NodeLogic node) {
+        if (node.getParent() == null) {
+            return "" + node.getKownLiterals();
+        }
+        return getResolvedLogicNodesAsString(node.getParent()) + "-> " + node.getLastResolvedClause();
+    }
+
+
+    /*******************************************************
+     ******************* Route finding *********************
+     *******************************************************/
 
 
     public String findRoutePath(List<Road> roads, Node startCrossing, int latEnd, int longEnd) {
