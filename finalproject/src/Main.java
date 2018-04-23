@@ -52,8 +52,8 @@ public class Main {
             int latEnd = 5;
             int longEnd = 8;
     
-            Heureka heureka = new Heureka(roads);
-            String pathFound = heureka.findPath(new Node(null, latStart, longStart), latEnd, longEnd);
+            Heureka heureka = new Heureka();
+            String pathFound = heureka.findRoutePath(roads, new NodeRoute(null, latStart, longStart), latEnd, longEnd);
             System.out.println();
             System.out.println("Path found: " + pathFound);
         }
