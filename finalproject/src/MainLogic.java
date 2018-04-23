@@ -15,47 +15,35 @@ public class MainLogic {
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
 
-        /**********************************
-         * HARDCODED KNOWLEDGE BASE
-         */
 
         List<Clause> clauses = new ArrayList<>();
 
-//        HashMap<Character, Boolean> clauseMap1 = new HashMap<>();
-//        clauseMap1.put('d', true);
-//        clauses.add(new Clause(null, clauseMap1));
-//
-//        HashMap<Character, Boolean> clauseMap2 = new HashMap<>();
-//        clauseMap2.put('b', true);
-//        clauseMap2.put('c', true);
-//        clauseMap2.put('d', false);
-//        clauses.add(new Clause( null, clauseMap2));
-//
-//        HashMap<Character, Boolean> clauseMap3 = new HashMap<>();
-//        clauseMap3.put('b', true);
-//        clauseMap3.put('c', false);
-//        clauseMap3.put('d', false);
-//        clauses.add(new Clause(null, clauseMap3));
-//
-//        HashMap<Character, Boolean> clauseMap4 = new HashMap<>();
-//        clauseMap4.put('a', true);
-//        clauseMap4.put('b', false);
-//        clauses.add(new Clause(null, clauseMap4));
-
-
+        // Data file to open.
+        String fileName = "data/clauses.txt";
         Character goal = 'a';
 
+        String line = null;
 
-        /**
-         * END OF HARDCODED KNOWLEDGE BASE
-         *********************************/
+        try {
+            FileReader fileReader = new FileReader(fileName);
+
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 
-//            while((line = bufferedReader.readLine()) != null) {
-//                if (line != null && !line.isEmpty()) {
-//                    clauses.add(new Clause(line));
-//                }
-//            }
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line != null && !line.isEmpty()) {
+                    clauses.add(new Clause(line));
+                }
+            }
+        }
+        catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + fileName + "'");
+            return;
+        }
+        catch(IOException ex) {
+            System.out.println("Error reading file '" + fileName + "'");
+            return;
+        }
 
         for (Clause clause : clauses) {
             System.out.println("Clauses hash: " + clause.getCnfHash());
@@ -86,6 +74,8 @@ public class MainLogic {
 
         Heureka heureka = new Heureka();
         String resolvedClauses = heureka.resolveFromKb(clauses, goal, knownLiterals);
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println("Time to find a path: " + estimatedTime + " milliseconds");
         System.out.println();
         System.out.println("Order of resolved clauses: " + resolvedClauses);
     }
