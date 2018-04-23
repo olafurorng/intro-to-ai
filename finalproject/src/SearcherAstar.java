@@ -1,11 +1,13 @@
 import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * Created by olafurorn on 4/9/18.
  */
 public class SearcherAstar {
 
+    private Set<Node> exploredNodes = new HashSet<>();
     private PriorityQueue<Node> frontier;
     private HashSet<Node> frontierSet;
     private Heuristic heuristic;
@@ -25,5 +27,17 @@ public class SearcherAstar {
     public void addToFrontier(Node n) {
         frontier.add(n);
         frontierSet.add(n);
+    }
+
+    public boolean isFrontierEmpty() {
+        return frontier.size() == 0;
+    }
+
+    public boolean hasBeenExplored(Node node) {
+        return exploredNodes.contains(node);
+    }
+
+    public void addExploredNode(Node node) {
+        exploredNodes.add(node);
     }
 }

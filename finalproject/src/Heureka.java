@@ -10,7 +10,6 @@ public class Heureka {
     // class variables for Inference Engine for Propositional Logic
     private List<Clause> knowledgeBase;
     private Set<String> allLiteralsWithoutTheGoal;
-    private String goal;
 
     // class variables for route finding
     private List<Road> roads;
@@ -26,7 +25,6 @@ public class Heureka {
 
     public String resolveFromKb(List<Clause> knowledgeBase, String goal, Set<String> knownLiterals) {
         this.knowledgeBase = knowledgeBase;
-        this.goal = goal;
 
         // Lets find all literals
         allLiteralsWithoutTheGoal = new HashSet<>();
@@ -62,6 +60,10 @@ public class Heureka {
     }
 
     private String exploreNodesLogic() {
+        if (searcherAstar.isFrontierEmpty()) {
+            return "No solution was found";
+        }
+
         NodeLogic exploringNode = (NodeLogic) searcherAstar.getAndRemoveLeaf();
         for (Clause clause : knowledgeBase) {
             Set<String> leftLiteralsInClause = clause.getCnfHashLeft().keySet();
@@ -85,7 +87,10 @@ public class Heureka {
                     return getResolvedLogicNodesAsString(newNode);
                 }
 
-                searcherAstar.addToFrontier(newNode);
+                searcherAstar.addExploredNode(exploringNode);
+                if (!searcherAstar.hasBeenExplored(newNode)) {
+                    searcherAstar.addToFrontier(newNode);
+                }
             }
         }
 
@@ -124,13 +129,23 @@ public class Heureka {
     }
 
     private String exploreNodesRoute(int latEnd, int longEnd) {
+        if (searcherAstar.isFrontierEmpty()) {
+            return "No solution was found";
+        }
+
         NodeRoute exploringNode = (NodeRoute) searcherAstar.getAndRemoveLeaf();
         List<Road> availableRoads = getAvailableRoads(exploringNode);
         for (Road road : availableRoads) {
             if (road.getLatEnd() == latEnd && road.getLongEnd() == longEnd) {
                 return getPathFromNodeAsString(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd(), road.getName()));
             }
-            searcherAstar.addToFrontier(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd(), road.getName()));
+
+            NodeRoute newNode = new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd(), road.getName());
+
+            searcherAstar.addExploredNode(exploringNode);
+            if (!searcherAstar.hasBeenExplored(newNode)) {
+                searcherAstar.addToFrontier(newNode);
+            }
         }
 
         return exploreNodesRoute(latEnd, longEnd);
