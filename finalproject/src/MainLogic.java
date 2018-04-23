@@ -16,7 +16,7 @@ public class MainLogic {
         List<Clause> clauses = new ArrayList<>();
 
         // Data file to open.
-        String fileName = "data/clauses.txt";
+        String fileName = "data/clausetest1.txt";
 
         String line = null;
 
@@ -41,7 +41,9 @@ public class MainLogic {
         }
 
         for (Clause clause : clauses) {
-            System.out.println("Clauses hash: " + clause.getCnfHash());
+            System.out.println("Clauses hash left: " + clause.getCnfHashLeft());
+            System.out.println("Clauses hash right: " + clause.getCnfHashRight());
+            // Possible remove duplicates of clauses containing each other
         }
 
         long estimatedTime = System.currentTimeMillis() - startTime;

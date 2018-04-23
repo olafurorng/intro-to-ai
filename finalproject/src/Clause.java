@@ -3,35 +3,74 @@ import java.util.HashMap;
 public class Clause {
 
     private String originalForm;
-    private HashMap<Character, Boolean> cnfHash = new HashMap<Character, Boolean>();
+    //private HashMap<String, Boolean> cnfHash = new HashMap<String, Boolean>();
+    private HashMap<String, Boolean> cnfHashLeft = new HashMap<String, Boolean>();
+    private HashMap<String, Boolean> cnfHashRight = new HashMap<String, Boolean>();
+
+    private Boolean duplicate = false;
 
     public Clause(String originalForm) {
         this.originalForm = originalForm;
 
-        String[] lessArray = originalForm.split("<");
+        boolean ifFormat = originalForm.indexOf("if") != -1 ? true : false;
+        boolean lessFormat = originalForm.indexOf("<") != -1 ? true : false;
 
-        if (lessArray.length == 1) {
-            String[] spaceArray = lessArray[0].split(" ");
+        if (!ifFormat && !lessFormat) {
+            String[] spaceArray = originalForm.split(" ");
 
             for (String letter : spaceArray) {
                 if (letter != null && !letter.isEmpty()) {    
-                    cnfHash.put(letter.charAt(0), true);
+                    if (letter.length() > 1) {
+                        //cnfHash.put(letter.substring(letter.length() - 1), false);
+                        cnfHashRight.put(letter.substring(letter.length() - 1), false);
+                    }
+                    else {
+                        //cnfHash.put(letter, true);
+                        cnfHashRight.put(letter, true);
+                    }
                 }
             }
         }
         else {
+            String[] lessArray = {};
+
+            if (lessFormat) {
+                lessArray = originalForm.split("<");
+            }
+            else {
+                lessArray = originalForm.split("if");
+            }
+
             String[] leftSpaceArray = lessArray[0].split(" ");
             String[] RightSpaceArray = lessArray[1].split(" ");
 
+            if(lessArray[0] == lessArray[1]) {
+                this.duplicate = true;
+            }
+
             for (String letter : leftSpaceArray) {
-                if (letter != null && !letter.isEmpty()) {    
-                    cnfHash.put(letter.charAt(0), true);
+                if (letter != null && !letter.isEmpty()) {  
+                    if (letter.length() > 1) {
+                        //cnfHash.put(letter.substring(letter.length() - 1), false);
+                        cnfHashLeft.put(letter.substring(letter.length() - 1), false);
+                    }
+                    else {
+                        //cnfHash.put(letter, true);
+                        cnfHashLeft.put(letter, true);
+                    }  
                 }
             }
 
             for (String letter : RightSpaceArray) {  
                 if (letter != null && !letter.isEmpty()) {    
-                    cnfHash.put(letter.charAt(0), false);
+                    if (letter.length() > 1) {
+                        //cnfHash.put(letter.substring(letter.length() - 1), true);
+                        cnfHashRight.put(letter.substring(letter.length() - 1), true);
+                    }
+                    else {
+                        //cnfHash.put(letter, false);
+                        cnfHashRight.put(letter, false);
+                    }
                 }
             }
         }
@@ -41,10 +80,26 @@ public class Clause {
         return originalForm;
     }
 
-    public HashMap getCnfHash() {
-        return cnfHash;
+    //public HashMap getCnfHash() {
+    //    return cnfHash;
+    //}
+
+    public HashMap getCnfHashLeft() {
+        return cnfHashLeft;
     }
 
+    public HashMap getCnfHashRight() {
+        return cnfHashRight;
+    }
+
+    public Boolean getIsDuplicate() {
+        return duplicate;
+    }
+
+    public void setIsDuplicate(Boolean state) {
+        this.duplicate = state;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
