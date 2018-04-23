@@ -1,4 +1,6 @@
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by olafurorn on 4/9/18.
@@ -6,18 +8,21 @@ import java.util.List;
 public class NodeLogic implements Node {
 
     private NodeLogic parent;
-    private List<Character> literals;
+    private Set<Character> kownLiterals;
+    private Clause lastResolvedClause;
 
     private int g;
 
-    public NodeLogic(NodeLogic parent, List<Character> newLiterals) {
+    public NodeLogic(NodeLogic parent, Clause lastResolvedClause, List<Character> newLiterals) {
         this.parent = parent;
-        this.literals = newLiterals;
+        this.lastResolvedClause = lastResolvedClause;
+        this.kownLiterals = new HashSet<>();
+        this.kownLiterals.addAll(newLiterals);
 
         if (parent == null) {
             this.g = 0;
         } else {
-            this.literals.addAll(parent.getLiterals());
+            this.kownLiterals.addAll(parent.getKownLiterals());
             this.g = parent.g() + 1;
         }
     }
@@ -26,8 +31,12 @@ public class NodeLogic implements Node {
         return this.g;
     }
 
-    public List<Character> getLiterals() {
-        return literals;
+    public Set<Character> getKownLiterals() {
+        return kownLiterals;
+    }
+
+    public Clause getLastResolvedClause() {
+        return lastResolvedClause;
     }
 
     public NodeLogic getParent() {
@@ -38,7 +47,7 @@ public class NodeLogic implements Node {
     public String toString() {
         return "NodeLogic{" +
                 "parent=" + parent +
-                ", literals=" + literals +
+                ", kownLiterals=" + kownLiterals +
                 ", g=" + g +
                 '}';
     }
@@ -52,13 +61,13 @@ public class NodeLogic implements Node {
 
         if (g != nodeLogic.g) return false;
         if (parent != null ? !parent.equals(nodeLogic.parent) : nodeLogic.parent != null) return false;
-        return literals.equals(nodeLogic.literals);
+        return kownLiterals.equals(nodeLogic.kownLiterals);
     }
 
     @Override
     public int hashCode() {
         int result = parent != null ? parent.hashCode() : 0;
-        result = 31 * result + literals.hashCode();
+        result = 31 * result + kownLiterals.hashCode();
         result = 31 * result + g;
         return result;
     }
