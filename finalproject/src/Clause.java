@@ -2,22 +2,39 @@
 public class Clause {
 
     private String originalForm;
-    private String cnfForm;
+    private static HashMap<Character, Boolean> cnfHash = new HashMap<Character, Boolean>();
 
-    public Clause(String originalForm, String cnfForm) {
+    public Clause(String originalForm) {
         this.originalForm = originalForm;
-        this.cnfForm = cnfForm;
 
+        String[] lessArray = key.split("<");
 
+        if (lessArray.length == 1) {
+            String[] spaceArray = lessArray[0].split(" ");
+
+            for (String letter : spaceArray) {
+                cnfHash.put(letter.charAt(0), true);
+            }
+        }
+        else {
+            String[] leftSpaceArray = lessArray[0].split(" ");
+            String[] RightSpaceArray = lessArray[1].split(" ");
+
+            for (String letter : leftSpaceArray) {
+                cnfHash.put(letter.charAt(0), true);
+            }
+
+            for (String letter : RightSpaceArray) {
+                cnfHash.put(letter.charAt(0), false);
+            }
+        }
     }
 
-    public int getOriginalForm() {
+    public String getOriginalForm() {
         return originalForm;
     }
 
-    public int getCnfForm() {
-        return cnfForm;
+    public HashMap getCnfHash() {
+        return cnfHash;
     }
-
-
 }
