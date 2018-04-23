@@ -8,12 +8,12 @@ import java.util.Set;
 public class NodeLogic implements Node {
 
     private NodeLogic parent;
-    private Set<Character> kownLiterals;
+    private Set<String> kownLiterals;
     private Clause lastResolvedClause;
 
     private int g;
 
-    public NodeLogic(NodeLogic parent, Clause lastResolvedClause, List<Character> newLiterals) {
+    public NodeLogic(NodeLogic parent, Clause lastResolvedClause, Set<String> newLiterals) {
         this.parent = parent;
         this.lastResolvedClause = lastResolvedClause;
         this.kownLiterals = new HashSet<>();
@@ -31,7 +31,7 @@ public class NodeLogic implements Node {
         return this.g;
     }
 
-    public Set<Character> getKownLiterals() {
+    public Set<String> getKownLiterals() {
         return kownLiterals;
     }
 

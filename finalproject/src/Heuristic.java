@@ -40,10 +40,10 @@ public abstract class Heuristic implements Comparator<Node> {
     public static class HeuristicLogic extends Heuristic {
 
         final int numberOfPossibleLiterals;
-        final Set<Character> literalsToResolveGoal;
+        final Set<String> literalsToResolveGoal;
 
 
-        public HeuristicLogic(int numberOfPossibleLiterals, Set<Character> literalsToResolveGoal) {
+        public HeuristicLogic(int numberOfPossibleLiterals, Set<String> literalsToResolveGoal) {
             this.numberOfPossibleLiterals = numberOfPossibleLiterals;
             this.literalsToResolveGoal = literalsToResolveGoal;
         }
@@ -53,7 +53,7 @@ public abstract class Heuristic implements Comparator<Node> {
             NodeLogic node = (NodeLogic) n;
 
             int numberOfMissingLiteralToResolveGoal = literalsToResolveGoal.size();
-            for (Character knownLiteral : node.getKownLiterals()) {
+            for (String knownLiteral : node.getKownLiterals()) {
                 if (literalsToResolveGoal.contains(knownLiteral)) {
                     numberOfMissingLiteralToResolveGoal--;
                 }

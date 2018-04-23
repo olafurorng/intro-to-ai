@@ -118,8 +118,6 @@ public class Clause {
 
     @Override
     public String toString() {
-        return "Clause{" +
-                "cnfHash=" + cnfHash +
-                '}';
+        return originalForm;
     }
 }

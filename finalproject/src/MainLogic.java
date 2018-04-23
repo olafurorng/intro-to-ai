@@ -2,10 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by olafurorn on 4/9/18.
@@ -50,20 +47,11 @@ public class MainLogic {
             // Possible remove duplicates of clauses containing each other
         }
 
-        // iterate and find the only positive literals which are known literals
-        List<Character> knownLiterals = new ArrayList<>();
+        // iterate and find the clause which doesn't have any literals in left CNF hash map, i.e. literals which are known
+        Set<String> knownLiterals = new HashSet<>();
         for (Clause clause : clauses) {
-            HashMap<Character, Boolean> cnf = clause.getCnfHash();
-            boolean clauseFreeFromNegativeLiterals = true;
-            for (Character literal : cnf.keySet()) {
-                if (!cnf.get(literal)) {
-                    clauseFreeFromNegativeLiterals = false;
-                    break;
-                }
-            }
-
-            if (clauseFreeFromNegativeLiterals) {
-                for (Character literal : cnf.keySet()) {
+            if (clause.getCnfHashLeft().isEmpty()) {
+                for (String literal : clause.getCnfHashRight().keySet()) {
                     knownLiterals.add(literal);
                 }
             }
@@ -74,7 +62,7 @@ public class MainLogic {
         }
 
         Heureka heureka = new Heureka();
-        String resolvedClauses = heureka.resolveFromKb(clauses, 'a', knownLiterals);
+        String resolvedClauses = heureka.resolveFromKb(clauses, "a", knownLiterals);
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time to find a path: " + estimatedTime + " milliseconds");
         System.out.println();
