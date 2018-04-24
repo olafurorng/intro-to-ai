@@ -54,8 +54,15 @@ public class MainLogic {
                 if (!Objects.equals(outerClause.getOriginalForm(),innerClause.getOriginalForm())) {
                     if (outerClause.getCnfHashLeft().equals(innerClause.getCnfHashLeft())) {
                         if (innerClause.getCnfHashRight().entrySet().containsAll(outerClause.getCnfHashRight().entrySet())) {
+                            //System.out.println("Removed: " + innerClause.getCnfHashLeft());
                             clauses.remove(innerClause);
-                        }              
+                        }            
+                    }
+                    if (outerClause.getCnfHashRight().equals(innerClause.getCnfHashRight())) {
+                        if (innerClause.getCnfHashLeft().entrySet().containsAll(outerClause.getCnfHashLeft().entrySet())) {
+                            //System.out.println("Removed: " + outerClause.getCnfHashLeft());
+                            clauses.remove(outerClause);
+                        }            
                     }
                 }
             }
