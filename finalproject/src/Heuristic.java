@@ -33,7 +33,11 @@ public abstract class Heuristic implements Comparator<Node> {
         @Override
         int h(Node n) {
             NodeRoute node = (NodeRoute) n;
-            return Math.abs(node.getLatitude() - this.endLatitude) + Math.abs(node.getLongitude() - this.endLongitude);
+            int x1 = node.getLatitude();
+            int x2 = this.endLatitude;
+            int y1 = node.getLongitude();
+            int y2 = this.endLongitude;
+            return (int) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
         }
     }
 
