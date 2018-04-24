@@ -19,7 +19,8 @@ public class NodeRoute implements Node {
         if (parent == null) {
             this.g = 0;
         } else {
-            this.g = parent.g() + 1;
+            int lengthOfRoad = Math.abs(parent.getLatitude() - this.latitude) + Math.abs(parent.getLongitude() - longitude);
+            this.g = parent.g() + lengthOfRoad;
         }
     }
 
