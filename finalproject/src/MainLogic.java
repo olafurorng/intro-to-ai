@@ -25,11 +25,15 @@ public class MainLogic {
 
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
+            HashSet<String> lines = new HashSet<String>();
 
             while ((line = bufferedReader.readLine()) != null) {
                 if (line != null && !line.isEmpty()) {
-                    clauses.add(new Clause(line));
+                    lines.add(line);
                 }
+            }
+            for (String form: lines) {
+                clauses.add(new Clause(form));
             }
         }
         catch(FileNotFoundException ex) {
@@ -39,6 +43,22 @@ public class MainLogic {
         catch(IOException ex) {
             System.out.println("Error reading file '" + fileName + "'");
             return;
+        }
+
+        // Remove duplicates
+
+        List<Clause> clausesCopy = new ArrayList<>(clauses);
+
+        for (Clause outerClause : clausesCopy) {
+            for (Clause innerClause : clausesCopy) {
+                if (!Objects.equals(outerClause.getOriginalForm(),innerClause.getOriginalForm())) {
+                    if (outerClause.getCnfHashLeft().equals(innerClause.getCnfHashLeft())) {
+                        if (innerClause.getCnfHashRight().entrySet().containsAll(outerClause.getCnfHashRight().entrySet())) {
+                            clauses.remove(innerClause);
+                        }              
+                    }
+                }
+            }
         }
 
         for (Clause clause : clauses) {
