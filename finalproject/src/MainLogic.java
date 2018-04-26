@@ -12,7 +12,7 @@ public class MainLogic {
         List<Clause> clauses = new ArrayList<>();
 
         // Data file to open.
-        String fileName = "data/clauses.txt";
+        String fileName = "data/clausetest2_no_solution.txt";
 
         String line = null;
 

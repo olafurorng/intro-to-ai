@@ -10,6 +10,8 @@ public class Heureka {
     // class variables for Inference Engine for Propositional Logic
     private List<Clause> knowledgeBase;
     private Set<String> allLiteralsWithoutTheGoal;
+    private NodeLogic lastExploredNode;
+    private String goal;
 
     // class variables for route finding
     private List<Road> roads;
@@ -25,6 +27,7 @@ public class Heureka {
 
     public String resolveFromKb(List<Clause> knowledgeBase, String goal, Set<String> knownLiterals) {
         this.knowledgeBase = knowledgeBase;
+        this.goal = goal;
 
         // Lets find all literals
         allLiteralsWithoutTheGoal = new HashSet<>();
@@ -56,10 +59,16 @@ public class Heureka {
 
     private String exploreNodesLogic() {
         if (searcherAstar.isFrontierEmpty()) {
-            return "No solution was found";
+            Set<String> lastKnownLiterals = lastExploredNode.getKownLiterals();
+            Set<String> unResolvedLiterals = new HashSet<>(allLiteralsWithoutTheGoal);
+            System.out.println("unResolvedLiterals: " + unResolvedLiterals);
+            unResolvedLiterals.removeAll(lastKnownLiterals);
+            unResolvedLiterals.add(goal);
+            return "No solution was found. Resolved literals are: " + lastKnownLiterals + ". Unresolved literals are: " + unResolvedLiterals;
         }
 
         NodeLogic exploringNode = (NodeLogic) searcherAstar.getAndRemoveLeaf();
+        lastExploredNode = exploringNode;
         for (Clause clause : knowledgeBase) {
             Set<String> leftLiteralsInClause = clause.getCnfHashLeft().keySet();
             Set<String> rightNegativeLiteralsInClause = clause.getCnfHashRight().keySet();
