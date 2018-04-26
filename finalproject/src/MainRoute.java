@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
 import java.io.*;
+import java.util.*;
 
 /**
  * Created by olafurorn on 4/9/18.
@@ -22,15 +20,18 @@ public class MainRoute {
             FileReader fileReader = new FileReader(fileName);
 
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-
+ 
+            // Remove duplicate lines
+            HashSet<String> lines = new HashSet<String>();
             while((line = bufferedReader.readLine()) != null) {    
                 if (line != null && !line.isEmpty()) {
-
-                    String[] splitted = line.split("\\s+");
-                    roads.add(new Road(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]), splitted[2], Integer.parseInt(splitted[3]), Integer.parseInt(splitted[4])));
-   
+                    lines.add(line);
                 }         
-            }   
+            }  
+            for (String form: lines) {
+                String[] splitted = form.split("\\s+");
+                    roads.add(new Road(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]), splitted[2], Integer.parseInt(splitted[3]), Integer.parseInt(splitted[4])));
+            }
 
             bufferedReader.close();         
         }

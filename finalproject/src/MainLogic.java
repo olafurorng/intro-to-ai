@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -12,11 +9,10 @@ public class MainLogic {
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
 
-
         List<Clause> clauses = new ArrayList<>();
 
         // Data file to open.
-        String fileName = "data/clausetest2.txt";
+        String fileName = "data/clauses.txt";
 
         String line = null;
 
@@ -25,8 +21,8 @@ public class MainLogic {
 
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
+            // Remove duplicate lines
             HashSet<String> lines = new HashSet<String>();
-
             while ((line = bufferedReader.readLine()) != null) {
                 if (line != null && !line.isEmpty()) {
                     lines.add(line);
@@ -35,6 +31,8 @@ public class MainLogic {
             for (String form: lines) {
                 clauses.add(new Clause(form));
             }
+
+            bufferedReader.close();  
         }
         catch(FileNotFoundException ex) {
             System.out.println("Unable to open file '" + fileName + "'");
@@ -45,8 +43,7 @@ public class MainLogic {
             return;
         }
 
-        // Remove duplicates
-
+        // Remove duplicate clauses
         List<Clause> clausesCopy = new ArrayList<>(clauses);
 
         for (Clause outerClause : clausesCopy) {
@@ -54,24 +51,16 @@ public class MainLogic {
                 if (!Objects.equals(outerClause.getOriginalForm(),innerClause.getOriginalForm())) {
                     if (outerClause.getCnfHashLeft().equals(innerClause.getCnfHashLeft())) {
                         if (innerClause.getCnfHashRight().entrySet().containsAll(outerClause.getCnfHashRight().entrySet())) {
-                            //System.out.println("Removed: " + innerClause.getCnfHashLeft());
                             clauses.remove(innerClause);
                         }            
                     }
                     if (outerClause.getCnfHashRight().equals(innerClause.getCnfHashRight())) {
                         if (innerClause.getCnfHashLeft().entrySet().containsAll(outerClause.getCnfHashLeft().entrySet())) {
-                            //System.out.println("Removed: " + outerClause.getCnfHashLeft());
                             clauses.remove(outerClause);
                         }            
                     }
                 }
             }
-        }
-
-        for (Clause clause : clauses) {
-            System.out.println("Clauses hash left: " + clause.getCnfHashLeft());
-            System.out.println("Clauses hash right: " + clause.getCnfHashRight());
-            // Possible remove duplicates of clauses containing each other
         }
 
         // iterate and find the clause which doesn't have any literals in left CNF hash map, i.e. literals which are known
@@ -89,7 +78,7 @@ public class MainLogic {
         }
 
         Heureka heureka = new Heureka();
-        String resolvedClauses = heureka.resolveFromKb(clauses, "q", knownLiterals);
+        String resolvedClauses = heureka.resolveFromKb(clauses, "a", knownLiterals);
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time to find a path: " + estimatedTime + " milliseconds");
         System.out.println();
