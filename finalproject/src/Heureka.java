@@ -28,29 +28,24 @@ public class Heureka {
 
         // Lets find all literals
         allLiteralsWithoutTheGoal = new HashSet<>();
-        for (Clause clause : knowledgeBase) {
-            allLiteralsWithoutTheGoal.addAll(clause.getCnfHashLeft().keySet());
-            allLiteralsWithoutTheGoal.addAll(clause.getCnfHashRight().keySet());
-        }
-        allLiteralsWithoutTheGoal.remove(goal);
-
-        // Lets find which literals is needed to resolve the goal
         Set<String> literalsToResolveGoal = new HashSet<>();
         for (Clause clause : knowledgeBase) {
-            HashMap<String, Boolean> literalsLeftSide = clause.getCnfHashLeft();
-            for (String literal : literalsLeftSide.keySet()) {
-                if (literal.equals(goal)) { // is goal literal
-                    // lets find all the literals on the right side which are needed literals to resolve the goal
-                    for (String literal2 : clause.getCnfHashRight().keySet()) {
-                        literalsToResolveGoal.add(literal2);
-                    }
+ 
+            if (clause.getCnfHashLeft().get(goal) == null) {
+                allLiteralsWithoutTheGoal.addAll(clause.getCnfHashLeft().keySet());
+                allLiteralsWithoutTheGoal.addAll(clause.getCnfHashRight().keySet());
+            }
+            else {
+                for (String literal : clause.getCnfHashLeft().keySet()) {
+                    if (literal.equals(goal)) { // is goal literal
+                        // lets find all the literals on the right side which are needed literals to resolve the goal
+                        for (String literal2 : clause.getCnfHashRight().keySet()) {
+                            literalsToResolveGoal.add(literal2);
+                        }
+                    } 
                 }
-
-                allLiteralsWithoutTheGoal.add(literal);
             }
         }
-        allLiteralsWithoutTheGoal.remove(goal);
-
 
         // create the A* search and start searching
         this.searcherAstar = new SearcherAstar(new Heuristic.HeuristicLogic(allLiteralsWithoutTheGoal.size() + 1, literalsToResolveGoal));
