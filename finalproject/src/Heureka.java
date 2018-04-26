@@ -137,7 +137,7 @@ public class Heureka {
         List<Road> availableRoads = getAvailableRoads(exploringNode);
         for (Road road : availableRoads) {
             if (road.getLatEnd() == latEnd && road.getLongEnd() == longEnd) {
-                return getPathFromNodeAsString(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd(), road.getName()));
+                return getWholePath(new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd(), road.getName()));
             }
 
             NodeRoute newNode = new NodeRoute(exploringNode, road.getLatEnd(), road.getLongEnd(), road.getName());
@@ -167,7 +167,52 @@ public class Heureka {
         if (node.getParent() == null) {
             return node.getName() + " (" + node.getLatitude() + "," + node.getLongitude() + ")";
         }
-        return getPathFromNodeAsString(node.getParent()) + "-> " + node.getName() + " (" + node.getLatitude() + "," + node.getLongitude() + ")";
+        return getPathFromNodeAsString(node.getParent()) + "->" + node.getName() + " (" + node.getLatitude() + "," + node.getLongitude() + ")";
+    }
+
+    private String getWholePath(NodeRoute node) {
+        String wholePath = getPathFromNodeAsString(node);
+        
+        String[] splitString = wholePath.split("->");
+        String finalString = "";
+        String firstCoordinates = "";
+        String lastCoordinates = "";
+        String lastStreet = "";
+        int counter = 0;
+
+        for (String s: splitString) {     
+            String[] split = s.split(" ");   
+            String street = split[0];
+            String coordinates = split[1];
+
+            if (counter == 0) {
+                firstCoordinates = coordinates;
+            }
+            else if (counter == 1) {
+                lastStreet = street;
+                lastCoordinates = coordinates;           
+            }
+            else {
+                if (!Objects.equals(lastStreet,street)) {
+                    finalString += lastStreet + " (" + firstCoordinates + "->" + lastCoordinates + ") -> ";
+                    lastStreet = street;
+                    firstCoordinates = lastCoordinates;
+                    lastCoordinates = coordinates;
+                }
+                else {
+                    lastStreet = street;
+                    lastCoordinates = coordinates;
+                }
+            }
+
+            if (counter == splitString.length - 1) {
+                finalString += lastStreet + " (" + firstCoordinates + "->" + lastCoordinates + ")";
+            }
+
+            counter++;
+        }
+
+        return finalString;
     }
 }
 
