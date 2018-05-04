@@ -2,9 +2,6 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-/**
- * Created by olafurorn on 4/9/18.
- */
 public class SearcherAstar {
 
     private Set<Node> exploredNodes = new HashSet<>();

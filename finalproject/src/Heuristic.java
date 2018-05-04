@@ -1,11 +1,6 @@
-
-
 import java.util.Comparator;
 import java.util.Set;
 
-/**
- * Created by olafurorn on 4/10/18.
- */
 public abstract class Heuristic implements Comparator<Node> {
 
     abstract int h(Node n);

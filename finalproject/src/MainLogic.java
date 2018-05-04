@@ -1,9 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-/**
- * Created by olafurorn on 4/9/18.
- */
 public class MainLogic {
 
     public static void main(String[] args) {
@@ -12,7 +9,7 @@ public class MainLogic {
         List<Clause> clauses = new ArrayList<>();
 
         // Data file to open.
-        String fileName = "data/clausetest2_no_solution.txt";
+        String fileName = "data/clausetest3.txt";
 
         String line = null;
 
@@ -63,7 +60,7 @@ public class MainLogic {
             }
         }
 
-        // iterate and find the clause which doesn't have any literals in left CNF hash map, i.e. literals which are known
+        // Iterate and find the clause which doesn't have any literals in left CNF hash map, i.e. literals which are known
         Set<String> knownLiterals = new HashSet<>();
         for (Clause clause : clauses) {
             if (clause.getCnfHashLeft().isEmpty()) {
@@ -78,7 +75,7 @@ public class MainLogic {
         }
 
         Heureka heureka = new Heureka();
-        String resolvedClauses = heureka.resolveFromKb(clauses, "a", knownLiterals);
+        String resolvedClauses = heureka.resolveFromKb(clauses, "breakfast", knownLiterals);
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println("Time to find a path: " + estimatedTime + " milliseconds");
         System.out.println();

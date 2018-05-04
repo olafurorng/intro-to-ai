@@ -1,9 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-/**
- * Created by olafurorn on 4/9/18.
- */
 public class MainRoute {
 
     public static void main(String[] args) {
@@ -12,7 +9,7 @@ public class MainRoute {
         List<Road> roads = new ArrayList<>();
 
         // Data file to open.
-        String fileName = "data/manhattan.txt";
+        String fileName = "data/city.txt";
 
         String line = null;
 
@@ -42,10 +39,10 @@ public class MainRoute {
             System.out.println("Error reading file '" + fileName + "'");                  
         }
 
-        int latStart = 2;
-        int longStart = 2;
-        int latEnd = 5;
-        int longEnd = 8;
+        int latStart = 25;
+        int longStart = 100;
+        int latEnd = 50;
+        int longEnd = 90;
 
         Heureka heureka = new Heureka();
         String pathFound = heureka.findRoutePath(roads, new NodeRoute(null, latStart, longStart, ""), latEnd, longEnd);

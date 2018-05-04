@@ -1,6 +1,3 @@
-/**
- * Created by olafurorn on 4/9/18.
- */
 public class NodeRoute implements Node {
 
     private NodeRoute parent;

@@ -1,21 +1,17 @@
 import java.util.*;
 
-/**
- * Created by olafurorn on 4/9/18.
- */
 public class Heureka {
 
     private SearcherAstar searcherAstar;
 
-    // class variables for Inference Engine for Propositional Logic
+    // Class variables for Inference Engine for Propositional Logic
     private List<Clause> knowledgeBase;
     private Set<String> allLiteralsWithoutTheGoal;
     private NodeLogic lastExploredNode;
     private String goal;
 
-    // class variables for route finding
+    // Class variables for route finding
     private List<Road> roads;
-
 
     public Heureka() {
 
@@ -31,26 +27,30 @@ public class Heureka {
 
         // Lets find all literals
         allLiteralsWithoutTheGoal = new HashSet<>();
+        for (Clause clause : knowledgeBase) {
+            allLiteralsWithoutTheGoal.addAll(clause.getCnfHashLeft().keySet());
+            allLiteralsWithoutTheGoal.addAll(clause.getCnfHashRight().keySet());
+        }
+        allLiteralsWithoutTheGoal.remove(goal);
+
+        // Lets find which literals is needed to resolve the goal
         Set<String> literalsToResolveGoal = new HashSet<>();
         for (Clause clause : knowledgeBase) {
- 
-            if (clause.getCnfHashLeft().get(goal) == null) {
-                allLiteralsWithoutTheGoal.addAll(clause.getCnfHashLeft().keySet());
-                allLiteralsWithoutTheGoal.addAll(clause.getCnfHashRight().keySet());
-            }
-            else {
-                for (String literal : clause.getCnfHashLeft().keySet()) {
-                    if (literal.equals(goal)) { // is goal literal
-                        // lets find all the literals on the right side which are needed literals to resolve the goal
-                        for (String literal2 : clause.getCnfHashRight().keySet()) {
-                            literalsToResolveGoal.add(literal2);
-                        }
-                    } 
+            HashMap<String, Boolean> literalsLeftSide = clause.getCnfHashLeft();
+            for (String literal : literalsLeftSide.keySet()) {
+                if (literal.equals(goal)) { // is goal literal
+                    // Lets find all the literals on the right side which are needed literals to resolve the goal
+                    for (String literal2 : clause.getCnfHashRight().keySet()) {
+                        literalsToResolveGoal.add(literal2);
+                    }
                 }
+
+                allLiteralsWithoutTheGoal.add(literal);
             }
         }
+        allLiteralsWithoutTheGoal.remove(goal);
 
-        // create the A* search and start searching
+        // Create the A* search and start searching
         this.searcherAstar = new SearcherAstar(new Heuristic.HeuristicLogic(allLiteralsWithoutTheGoal.size() + 1, literalsToResolveGoal));
         NodeLogic startingNode = new NodeLogic(null, null, knownLiterals);
         searcherAstar.addToFrontier(startingNode);
@@ -73,9 +73,7 @@ public class Heureka {
             Set<String> leftLiteralsInClause = clause.getCnfHashLeft().keySet();
             Set<String> rightNegativeLiteralsInClause = clause.getCnfHashRight().keySet();
 
-
-
-            // check if the clause can be resolved
+            // Check if the clause can be resolved
             boolean clauseCanBeResolved = !leftLiteralsInClause.isEmpty();
             for (String negativeLiteral : rightNegativeLiteralsInClause) {
                 if (!exploringNode.getKownLiterals().contains(negativeLiteral)) {
@@ -86,7 +84,7 @@ public class Heureka {
             if (clauseCanBeResolved) {
                 NodeLogic newNode = new NodeLogic(exploringNode, clause, leftLiteralsInClause);
 
-                // we check if we have the empty clause
+                // We check if we have the empty clause
                 if (isEmptyClause(leftLiteralsInClause)) {
                     return getResolvedLogicNodesAsString(newNode);
                 }
@@ -102,7 +100,7 @@ public class Heureka {
     }
 
     private boolean isEmptyClause(Set<String> positiveLiteralsInClause) {
-        // check if any of the literals in 'positiveLiteralsInClause' is not in: "KB ^ -goal"
+        // Check if any of the literals in 'positiveLiteralsInClause' is not in: "KB ^ -goal"
         for (String newLiteral : positiveLiteralsInClause) {
             if (!allLiteralsWithoutTheGoal.contains(newLiteral)) {
                 return true;
@@ -119,11 +117,9 @@ public class Heureka {
         return getResolvedLogicNodesAsString(node.getParent()) + "| " + node.getLastResolvedClause();
     }
 
-
     /*******************************************************
      ******************* Route finding *********************
      *******************************************************/
-
 
     public String findRoutePath(List<Road> roads, Node startCrossing, int latEnd, int longEnd) {
         this.roads = roads;
@@ -155,7 +151,6 @@ public class Heureka {
         return exploreNodesRoute(latEnd, longEnd);
     }
 
-
     private List<Road> getAvailableRoads(NodeRoute crossing) {
         List<Road> availableRoads = new ArrayList<>();
         for (Road road : roads) {
@@ -174,6 +169,7 @@ public class Heureka {
         return getPathFromNodeAsString(node.getParent()) + "->" + node.getName() + " (" + node.getLatitude() + "," + node.getLongitude() + ")";
     }
 
+    // Removes dublicate paths used in succession
     private String getWholePath(NodeRoute node) {
         String wholePath = getPathFromNodeAsString(node);
         
@@ -219,4 +215,3 @@ public class Heureka {
         return finalString;
     }
 }
-

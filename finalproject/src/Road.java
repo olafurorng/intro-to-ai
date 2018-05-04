@@ -1,6 +1,3 @@
-/**
- * Created by olafurorn on 4/9/18.
- */
 public class Road {
 
     private int latStart;
@@ -61,5 +58,4 @@ public class Road {
         if (longEnd != road.longEnd) return false;
         return name != null ? name.equals(road.name) : road.name == null;
     }
-
 }

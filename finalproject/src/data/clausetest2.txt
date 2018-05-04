@@ -1,10 +1,9 @@
 q if p
-p if l m
-m if b l
-l if a p
-l if a
-l if a
-l if a b
+p if v m
+m if c v
+v if a c
+v h if a
+v h if a b
 a b c if h
 a b if h
 a

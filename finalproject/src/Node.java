@@ -1,6 +1,5 @@
-/**
- * Created by olafurorn on 4/9/18.
- */
+
+// Re-usable parts for the Node classes
 public interface Node {
 
     int g();
