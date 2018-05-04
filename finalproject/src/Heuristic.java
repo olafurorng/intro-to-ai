@@ -5,7 +5,6 @@ public abstract class Heuristic implements Comparator<Node> {
 
     abstract int h(Node n);
 
-
     private int f(Node n) {
         return n.g() + this.h(n);
     }
@@ -41,7 +40,6 @@ public abstract class Heuristic implements Comparator<Node> {
         final int numberOfPossibleLiterals;
         final Set<String> literalsToResolveGoal;
 
-
         public HeuristicLogic(int numberOfPossibleLiterals, Set<String> literalsToResolveGoal) {
             this.numberOfPossibleLiterals = numberOfPossibleLiterals;
             this.literalsToResolveGoal = literalsToResolveGoal;
@@ -57,7 +55,6 @@ public abstract class Heuristic implements Comparator<Node> {
                     numberOfMissingLiteralToResolveGoal--;
                 }
             }
-
 
             int numberOfUnknownLiterals = numberOfPossibleLiterals - node.getKownLiterals().size();
 
