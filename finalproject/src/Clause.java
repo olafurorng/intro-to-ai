@@ -8,8 +8,6 @@ public class Clause {
     private HashMap<String, Boolean> cnfHashLeft = new HashMap<String, Boolean>();
     private HashMap<String, Boolean> cnfHashRight = new HashMap<String, Boolean>();
 
-    private Boolean duplicate = false;
-
     public Clause(String originalForm) {
         this.originalForm = originalForm;
 
@@ -44,10 +42,6 @@ public class Clause {
 
             String[] leftSpaceArray = lessArray[0].split(" ");
             String[] RightSpaceArray = lessArray[1].split(" ");
-
-            if(lessArray[0] == lessArray[1]) {
-                this.duplicate = true;
-            }
 
             for (String letter : leftSpaceArray) {
                 if (letter != null && !letter.isEmpty()) {  
@@ -91,14 +85,6 @@ public class Clause {
 
     public HashMap<String, Boolean> getCnfHashRight() {
         return cnfHashRight;
-    }
-
-    public Boolean getIsDuplicate() {
-        return duplicate;
-    }
-
-    public void setIsDuplicate(Boolean state) {
-        this.duplicate = state;
     }
     
     @Override
